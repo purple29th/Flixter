@@ -9,6 +9,8 @@ import java.util.List;
 
 @Parcel
 public class Movie {
+    private static String baseImagePath = "https://image.tmdb.org/t/p/w342/%s";
+
     String backdropPath;
     String posterpath;
     String title;
@@ -38,10 +40,10 @@ public class Movie {
     }
 
     public String getPosterpath() {
-        return String.format("https://image.tmdb.org/t/p/w342/%s",posterpath);
+        return String.format(Movie.baseImagePath, posterpath);
     }
     public  String getBackdropPath() {
-        return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
+        return String.format(Movie.baseImagePath, backdropPath);
     }
 
     public String getTitle() {
