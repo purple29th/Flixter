@@ -22,12 +22,13 @@ import java.util.List;
 import okhttp3.Headers;
 
  public class MainActivity extends AppCompatActivity {
-     public static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
      public static final String TAG = "MainActivity";
      List<Movie> movies;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + getString(R.string.secret);
         setContentView(R.layout.activity_main);
         RecyclerView rvMovies = findViewById(R.id.rvMovies);
         movies = new ArrayList<>();
@@ -40,19 +41,24 @@ import okhttp3.Headers;
 
 
         AsyncHttpClient client = new AsyncHttpClient();
+        findMovies(client, NOW_PLAYING_URL, movieAdapter);
+
+    }
+
+    public void findMovies(AsyncHttpClient client, String NOW_PLAYING_URL, MovieAdapter movieAdapter){
         client.get(NOW_PLAYING_URL, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.d(TAG,  "onSuccess");
                 JSONObject jsonObject = json.jsonObject;
                 try {
-                     JSONArray results = jsonObject.getJSONArray("results");
-                     Log.i(TAG, "Results" +  results.toString());
-                     movies.addAll(Movie.fromJsonArray(results)) ;
-                     movieAdapter.notifyDataSetChanged();
-                     Log.i(TAG, "Movies" +  movies.size());
+                    JSONArray results = jsonObject.getJSONArray("results");
+                    Log.i(TAG, "Results" +  results.toString());
+                    movies.addAll(Movie.fromJsonArray(results)) ;
+                    movieAdapter.notifyDataSetChanged();
+                    Log.i(TAG, "Movies" +  movies.size());
                 } catch (JSONException e) {
-                     Log.e(TAG,"Hit json exception", e) ;
+                    Log.e(TAG,"Hit json exception", e) ;
                     e.printStackTrace();
                 }
 
